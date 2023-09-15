@@ -3,28 +3,31 @@ package com.api.demo.advice;
 import com.api.demo.exception.EmployeeNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class ExceptionHandlerClass {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
-        Map<String,String> errorMap=new HashMap<>();
+    public ResponseEntity<ExceptionMsg> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
+       ExceptionMsg response=new ExceptionMsg();
         ex.getAllErrors().forEach(err ->{
-            errorMap.put("errorMsg",err.getDefaultMessage());
+            response.setError(err.getDefaultMessage());
         });
-        return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(EmployeeNotFoundException.class)
-    public ResponseEntity<Map<String,String>> hanldeEmployeeNotFoundException(EmployeeNotFoundException ex){
-        Map<String,String> errorMap=new HashMap<>();
-        errorMap.put("errorMsg",ex.getLocalizedMessage());
-        return new ResponseEntity<>(errorMap,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ExceptionMsg> hanldeEmployeeNotFoundException(EmployeeNotFoundException msg){
+        ExceptionMsg response=new ExceptionMsg();
+        response.setError(msg.getLocalizedMessage());
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 }

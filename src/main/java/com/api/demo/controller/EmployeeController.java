@@ -19,13 +19,13 @@ public class EmployeeController {
     @PostMapping("/employee")
     public ResponseEntity<Employee> createEmployees(@Valid @RequestBody Employee employee){
         Employee response = employeeServices.saveEmployee(employee);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/employee/{eid}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer eid){
         Employee response = employeeServices.getEmployeeById(eid);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.FOUND);
     }
 
     @GetMapping("/employee")
