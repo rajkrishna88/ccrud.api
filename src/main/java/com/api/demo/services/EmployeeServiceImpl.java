@@ -1,20 +1,24 @@
 package com.api.demo.services;
 
+import com.api.demo.constant.EmployeeConstant;
 import com.api.demo.entity.Employee;
 import com.api.demo.exception.EmployeeNotFoundException;
 import com.api.demo.repository.EmployeeRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Valid
 public class EmployeeServiceImpl implements EmployeeServices {
     @Autowired
     private EmployeeRespository repo;
 
     @Override
-    public Employee saveEmployee(Employee employee) {
+    public Employee saveEmployee( @Valid Employee employee) {
 
         return repo.save(employee);
     }
@@ -25,8 +29,8 @@ public class EmployeeServiceImpl implements EmployeeServices {
         if (byId.isPresent()){
             employee.setEid(eid);
             return repo.save(employee);
-        }else
-        throw new EmployeeNotFoundException("Employee not found with id : "+eid);
+        }
+        throw new EmployeeNotFoundException(EmployeeConstant.EMPLOYEE_NOT_FOUND.getValue()+eid);
     }
 
     @Override
@@ -35,14 +39,13 @@ public class EmployeeServiceImpl implements EmployeeServices {
         if (byId.isPresent()){
            return byId.get();
         }
-        throw new EmployeeNotFoundException("Employee not found with id : "+eid);
+        throw new EmployeeNotFoundException(EmployeeConstant.EMPLOYEE_NOT_FOUND.getValue() +eid);
 
     }
 
     @Override
     public List<Employee> getAllEmployees() {
-        List<Employee> all = repo.findAll();
-        return all;
+        return  repo.findAll();
     }
 
     @Override
@@ -52,6 +55,6 @@ public class EmployeeServiceImpl implements EmployeeServices {
             repo.deleteById(eid);
             return byId.get();
         }
-        throw new EmployeeNotFoundException("Employee not found with id : "+eid);
+        throw new EmployeeNotFoundException(EmployeeConstant.EMPLOYEE_NOT_FOUND.getValue()+eid);
     }
 }
